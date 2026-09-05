@@ -43,3 +43,24 @@ function getDistance(coord1, coord2) {
   
   return R * c; // Distanz in km
 }
+
+let ersteAuswahl = null;
+
+markers.forEach((marker, i) => {
+  marker.on('click', () => {
+    const dest = destinations[i];
+    
+    if (ersteAuswahl === null) {
+      // Erster Klick: als Startpunkt merken
+      ersteAuswahl = dest;
+      document.getElementById('info message').innerHTML = 
+        `<h2>${dest.name}</h2><p>Wähle ein zweites Ziel für die Distanz.</p>`;
+    } else {
+      // Zweiter Klick: Distanz berechnen
+      const distanz = getDistance(ersteAuswahl.coords, dest.coords);
+      document.getElementById('info message').innerHTML = 
+        `<h2>${ersteAuswahl.name} → ${dest.name}</h2><p>Luftlinie: ${distanz.toFixed(0)} km</p>`;
+      ersteAuswahl = null; // Reset für nächste Messung
+    }
+  });
+});
