@@ -1,1 +1,53 @@
-#map { height: 500px; }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  padding: 0.2rem;
+  background-color: #dfedfc;
+  font-family: Arial, sans-serif;
+  
+}
+
+#map { 
+    flex: 3; 
+    height: 95vh; 
+    margin: 1rem; 
+}
+
+#info_message { 
+    flex: 1; 
+    padding: 1rem; 
+    margin: 1rem;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+#map {
+  flex: 3;
+}
+
+#info_message {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: #f0f4f8;
+  border-left: 3px solid #2A81CB;
+  overflow-y: auto;
+}
+
+#info_message h2 {
+  color: #2A81CB;
+  margin-top: 0;
+}
+
+#info_message p {
+  color: #333;
+  line-height: 1.5;
+}
