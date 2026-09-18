@@ -6,27 +6,42 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 const destinations = [
-    { name: "Luzern", country: "Schweiz", region: "Kanton Luzern", coords: [47.05, 8.30] },
-    { name: "Rom", country: "Italien", region: "Lazio", coords: [41.89, 12.49] },
-    { name: "München", country: "Deutschland", region: "Bayern", coords: [48.13, 11.57] },
-    { name: "Paris", country: "Frankreich", region: "Île-de-France", coords: [48.85, 2.35] },
-    { name: "Wien", country: "Österreich", region: "Bundesland Wien", coords: [48.20, 16.37] },
-    { name: "Thun", country: "Schweiz", region: "Kanton Bern", coords: [46.75, 7.63] },
-    { name: "London", country: "England", region: "City of London", coords: [51.51, -0.13] },
-    { name: "Bristol", country: "England", region: "South West England", coords: [51.45, -2.58] },
-    { name: "Neapel", country: "Italien", region: "Kampanien", coords: [40.84, 14.24] },
-    { name: "Palermo", country: "Italien", region: "Sizilien", coords: [38.12, 13.36] },
+    { name: "Luzern", country: "Schweiz", region: "Kanton Luzern", coords: [47.05, 8.30], type: "stadt" },
+    { name: "Rom", country: "Italien", region: "Lazio", coords: [41.89, 12.49], type: "stadt" },
+    { name: "München", country: "Deutschland", region: "Bayern", coords: [48.13, 11.57], type: "stadt" },
+    { name: "Paris", country: "Frankreich", region: "Île-de-France", coords: [48.85, 2.35], type: "stadt" },
+    { name: "Wien", country: "Österreich", region: "Bundesland Wien", coords: [48.20, 16.37], type: "stadt" },
+    { name: "Thun", country: "Schweiz", region: "Kanton Bern", coords: [46.75, 7.63], type: "stadt" },
+    { name: "London", country: "England", region: "City of London", coords: [51.51, -0.13], type: "stadt" },
+    { name: "Bristol", country: "England", region: "South West England", coords: [51.45, -2.58], type: "stadt" },
+    { name: "Neapel", country: "Italien", region: "Kampanien", coords: [40.84, 14.24], type: "stadt" },
+    { name: "Palermo", country: "Italien", region: "Sizilien", coords: [38.12, 13.36], type: "stadt" },
 
 ];
 
-var markers = destinations.map(dest => L.marker(dest.coords).addTo(map));
+const airports = [
+    { name: "Flughafen Zürich", coords: [47.46, 8.55], type: "flughafen" },
+    { name: "EuroAirport Basel-Mulhouse", coords: [47.59, 7.53], type: "flughafen" },
+    { name: "Flughafen Rom-Fiumicino", coords: [41.80, 12.25], type: "flughafen" },
+]; 
 
-var markers = destinations.map(dest => 
-  L.marker(dest.coords)
+
+var flughafenIcon = L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41]
+});
+
+const alleOrte = [...destinations, ...airports];
+
+var markers = alleOrte.map(ort => {
+  const optionen = ort.type === "flughafen" ? { icon: flughafenIcon } : {};
+  return L.marker(ort.coords, optionen)
     .addTo(map)
-    .bindPopup(`${dest.name}<br>${dest.country}<br>${dest.region}`)
-);
-
+    .bindPopup(`${ort.name}`);
+});
+  // Harvesine-Formel aus dem Internet
 function getDistance(coord1, coord2) {
   const R = 6371; // Erdradius in km
   const [lat1, lon1] = coord1;
@@ -48,19 +63,26 @@ let ersteAuswahl = null;
 
 markers.forEach((marker, i) => {
   marker.on('click', () => {
-    const dest = destinations[i];
+    const aO = alleOrte[i];
     
     if (ersteAuswahl === null) {
       // Erster Klick: als Startpunkt merken
-      ersteAuswahl = dest;
-      document.getElementById('info message').innerHTML = 
-        `<h2>${dest.name}</h2><p>Wähle ein zweites Ziel für die Distanz.</p>`;
+      ersteAuswahl = aO;
+      document.getElementById('info_message').innerHTML = 
+        `<h2>${aO.name}</h2><p>Wähle ein zweites Ziel für die Distanz.</p>`;
     } else {
       // Zweiter Klick: Distanz berechnen
-      const distanz = getDistance(ersteAuswahl.coords, dest.coords);
-      document.getElementById('info message').innerHTML = 
-        `<h2>${ersteAuswahl.name} → ${dest.name}</h2><p>Luftlinie: ${distanz.toFixed(0)} km</p>`;
+      const distanz = getDistance(ersteAuswahl.coords, aO.coords);
+      if (distanz === 0) {
+        document.getElementById('info_message').innerHTML = 
+          `<h2>${ersteAuswahl.name} → ${aO.name}</h2><p>Bitte wähle einen anderen Ort als Ziel aus.</p>`;
+      } else {
+
+      document.getElementById('info_message').innerHTML = 
+        `<h2>${ersteAuswahl.name} → ${aO.name}</h2><p>Luftlinie: ${distanz.toFixed(0)} km</p>`;
+        }
       ersteAuswahl = null; // Reset für nächste Messung
+      
     }
   });
 });
