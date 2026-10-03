@@ -65,11 +65,15 @@ markers.forEach((marker, i) => {
   marker.on('click', () => {
     const aO = alleOrte[i];
     
+    const details = aO.type === "flughafen" 
+    ? "" 
+    : `<p>${aO.country}<br>${aO.region}</p>`;
+
     if (ersteAuswahl === null) {
       // Erster Klick: als Startpunkt merken
       ersteAuswahl = aO;
       document.getElementById('info_message').innerHTML = 
-        `<h2>${aO.name}</h2><p>Wähle ein zweites Ziel für die Distanz.</p>`;
+        `<h2>${aO.name}</h2>${details}<p>Wähle ein zweites Ziel für die Distanz.</p>`;
     } else {
       // Zweiter Klick: Distanz berechnen
       const distanz = getDistance(ersteAuswahl.coords, aO.coords);
@@ -85,4 +89,11 @@ markers.forEach((marker, i) => {
       
     }
   });
+});
+
+document.getElementById('map').addEventListener('keydown', (e) => {
+  const erlaubteTasten = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '+', '-'];
+  if (!erlaubteTasten.includes(e.key)) {
+    e.stopPropagation();
+  }
 });
