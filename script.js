@@ -13,9 +13,11 @@ const destinations = [
     { name: "Wien", country: "Österreich", region: "Bundesland Wien", coords: [48.20, 16.37], type: "stadt" },
     { name: "Thun", country: "Schweiz", region: "Kanton Bern", coords: [46.75, 7.63], type: "stadt" },
     { name: "London", country: "England", region: "City of London", coords: [51.51, -0.13], type: "stadt" },
-    { name: "Bristol", country: "England", region: "South West England", coords: [51.45, -2.58], type: "stadt" },
+    { name: "Dublin", country: "Irland", region: "Leinster", coords: [53.35, -6.26], type: "stadt" },
     { name: "Neapel", country: "Italien", region: "Kampanien", coords: [40.84, 14.24], type: "stadt" },
     { name: "Palermo", country: "Italien", region: "Sizilien", coords: [38.12, 13.36], type: "stadt" },
+    { name: "Barcelona", country: "Spanien", region: "Katalonien", coords: [41.39, 2.17], type: "stadt" },
+    { name: "Athen", country: "Griechenland", region: "Attika", coords: [37.98, 23.73], type: "stadt" }
 
 ];
 
@@ -61,6 +63,20 @@ function getDistance(coord1, coord2) {
 
 let ersteAuswahl = null;
 
+function zeigeStartZustand() {
+  document.getElementById('info_message').innerHTML = `
+    <h2 id="info_title">Willkommen beim Trip Planner!</h2>
+    <p>Wähle einen Ort auf der Karte aus, um Infos zu erhalten.</p>
+  `;
+}
+
+function zuruecksetzen() {
+  ersteAuswahl = null;
+  zeigeStartZustand();
+}
+
+zeigeStartZustand();
+
 markers.forEach((marker, i) => {
   marker.on('click', () => {
     const aO = alleOrte[i];
@@ -90,6 +106,8 @@ markers.forEach((marker, i) => {
     }
   });
 });
+
+document.getElementById('reset_button').addEventListener('click', zuruecksetzen);
 
 document.getElementById('map').addEventListener('keydown', (e) => {
   const erlaubteTasten = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '+', '-'];

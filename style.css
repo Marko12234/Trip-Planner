@@ -34,12 +34,19 @@ body {
   flex: 3;
 }
 
-#info_message {
+#sidebar {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 1.5rem;
   background-color: #f0f4f8;
   border-left: 3px solid #2A81CB;
+  border-radius: 8px;
   overflow-y: auto;
+}
+
+#info_message {
+  flex: 1; /* schiebt den Button nach unten */
 }
 
 #info_message h2 {
@@ -50,4 +57,57 @@ body {
 #info_message p {
   color: #333;
   line-height: 1.5;
+}
+
+#reset_button {
+  align-self: center;
+  margin-top: 0.8rem;
+  padding: 1rem 2rem;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  background-color: #2A81CB;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#reset_button:hover {
+  background-color: #1f67a3;
+}
+
+#map,
+#sidebar {
+  min-height: 0; /* verhindert, dass Flex-Kinder über den Rand wachsen */
+}
+
+/* Tablets und Handys: Karte oben, Sidebar darunter */
+@media (max-width: 800px) {
+  html, body {
+    height: 100dvh; /* berücksichtigt die Browserleiste auf dem Handy */
+  }
+
+  body {
+    flex-direction: column;
+  }
+
+  #map {
+    flex: none;
+    height: 55%;
+  }
+
+  #sidebar {
+    flex: 1;
+    padding: 1rem;
+    border-left: none;
+    border-top: 3px solid #2A81CB;
+  }
+
+  #info_message {
+    flex: none; /* Box nur so hoch wie der Inhalt */
+  }
+
+  #reset_button {
+    align-self: stretch; /* volle Breite, leicht antippbar */
+    margin-top: auto;
+  }
 }
